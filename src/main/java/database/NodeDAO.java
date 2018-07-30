@@ -5,12 +5,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class NodeDAO {
     private Session currentSession;
     public boolean isEmpty;
+    Set<Node> rootNodes = new HashSet<Node>();
 
     private static SessionFactory getSessionFactory() {
         try {
@@ -35,9 +38,10 @@ public class NodeDAO {
     public Serializable save(Node node) throws DAOException {
         if (isEmpty && !(node.getParentNode()==null)){
             throw new DAOException("You have to save root node first!");
-        } else {
-            isEmpty = false;
+        } else if (node.getParentNode()==null){
+            rootNodes.add(node);
         }
+        isEmpty = false;
         return getCurrentSession().save(node);
     }
 
@@ -47,7 +51,7 @@ public class NodeDAO {
 
     public void delete(Node node) {
         if(node.getParentNode()==null){
-            isEmpty = true; // root node deleted
+            isEmpty = true; // last root node deleted
         }
         getCurrentSession().delete(node);
     }
@@ -70,6 +74,10 @@ public class NodeDAO {
         }
         session.getTransaction().commit();
         return result;
+    }
+
+    public Set<Node> getRootNodes(){
+        return rootNodes;
     }
 
     public NodeDAO(){

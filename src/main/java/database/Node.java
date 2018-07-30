@@ -57,18 +57,40 @@ public class Node {
         parentNode.appendChild(this);
     }
 
+    public Node(){
+        // do nothing
+    }
+
     public Node(String name){
         this.name = name;
     }
 
-    // just for testing
+    public boolean hasChildren(){
+        return !childrenNodes.isEmpty();
+    }
+
+    public boolean isRoot(){
+        return parentNode==null;
+    }
+
+
     public String toString(){
+        /*
+        for testing
+
         Iterator<Node> iterator = childrenNodes.iterator();
         String result = "{ \"" + name + "\" : [ " + (iterator.hasNext()? iterator.next() : "");
         while (iterator.hasNext()){
             result += ", " + iterator.next();
         }
         result += " ] }";
-        return result;
+        */
+        return  "\t{\n" +
+                "\t\t\"id\"          : \"" + id + "\",\n" +
+                "\t\t\"parent\"      : \"" + (isRoot() ? "#" : parentNode.id) + "\",\n" +
+                "\t\t\"text\"        : \"" + name + "\",\n" +
+                //"\t\t\"icon\"        : \"string\",\n"+
+                "\t\t\"children\"    : " + hasChildren() + "\n" +
+                "\t\t}\n";
     }
 }
