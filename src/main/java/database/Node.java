@@ -73,6 +73,9 @@ public class Node {
         return parentNode==null;
     }
 
+    public void deleteChildren(Node node){
+        childrenNodes.remove(node);
+    }
 
     public String toString(){
         /*

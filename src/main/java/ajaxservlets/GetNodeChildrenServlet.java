@@ -24,6 +24,12 @@ public class GetNodeChildrenServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        try {
+            Thread.sleep(2000);
+            // this pause is a part of project requirements
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         response.setContentType("application/json; charset=utf-8");
         String id = request.getParameter("id");
         Set<Node> childrenNodes;
