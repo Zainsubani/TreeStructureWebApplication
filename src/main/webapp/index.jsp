@@ -21,19 +21,26 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
-
 	<script>
-
-	// lazy demo
-	$('#lazy').jstree({
-		'core' : {
-			'data' : {
-				"url" : "getnodechildren",
-				'data': function (node) {
-				return { "id" : node.id === '#' ? 'root' : node.id };
-                }
-			}
-		}
-	});
+	    	$('#lazy').jstree({
+        		'core' : {
+        		    'check_callback' : true,
+        			'data' : {
+        				'url' : 'getnodechildren',
+        				'data': function (node) {
+        				return { "id" : node.id === '#' ? 'root' : node.id };
+                        }
+        			}
+        		},
+        		'plugins' : [ 'dnd', 'contextmenu' ]
+                }).bind("move_node.jstree", function (e, data) {
+                    $.post(
+                        "movenode",
+                        {
+                          "id" : data.node.id,
+                           "new_parent_id" : data.parent
+                         }
+                    ).fail(function(error) { alert(error.responseJSON) });
+                });
 	</script>
 </body>
