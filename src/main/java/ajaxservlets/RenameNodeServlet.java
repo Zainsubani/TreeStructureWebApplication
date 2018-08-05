@@ -13,36 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "MoveNode",
-        urlPatterns = "/movenode"
+        name = "RenameNode",
+        urlPatterns = "/renamenode"
 )
-public class MoveNodeServlet extends HttpServlet {
+public class RenameNodeServlet extends HttpServlet {
     NodeDAO dao;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long id = Long.parseLong(request.getParameter("id"));
+        String name = request.getParameter("name");
         Node node = dao.get(id);
-        Node oldParent = node.getParentNode();
-        if (oldParent!=null) {
-            oldParent.deleteChildren(node);
-        } else {
-            dao.deleteRootNode(node);
-        }
-        String newId = request.getParameter("new_parent_id");
-        if (!newId.equals("#")){
-            Long newParentId = Long.parseLong(newId);
-            Node newParent = dao.get(newParentId);
-            newParent.appendChild(node);
-        } else {
-            node.setParentNode(null);
-            dao.setRootNode(node);
-        }
-        try {
-            dao.save(node);
-        } catch (NodeDAO.DAOException e) {
-            e.printStackTrace();
-        }
+        node.setName(name);
+        dao.update(node);
     }
 
     public void init(ServletConfig config) throws ServletException {

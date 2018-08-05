@@ -54,6 +54,7 @@ public class Node {
 
     public Node(String name, Node parentNode){
         this.name = name;
+        this.parentNode = parentNode;
         parentNode.appendChild(this);
     }
 

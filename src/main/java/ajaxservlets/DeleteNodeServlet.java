@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @WebServlet(
         name = "DeleteNode",
@@ -20,9 +19,15 @@ public class DeleteNodeServlet extends HttpServlet {
     NodeDAO dao;
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
         Long id = Long.parseLong(request.getParameter("id"));
         Node nodeToDelete = dao.get(id);
+        if (nodeToDelete.getParentNode()==null){
+            dao.deleteRootNode(nodeToDelete);
+        } else {
+            Node parentNode = nodeToDelete.getParentNode();
+            parentNode.deleteChildren(nodeToDelete);
+        }
         dao.delete(nodeToDelete);
     }
 

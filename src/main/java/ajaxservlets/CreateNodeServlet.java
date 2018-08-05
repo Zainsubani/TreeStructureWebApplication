@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @WebServlet(
         name = "CreateNode",
@@ -20,13 +19,15 @@ public class CreateNodeServlet extends HttpServlet {
     NodeDAO dao;
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
         String nodeName = request.getParameter("name");
         Long parentNodeId = Long.parseLong(request.getParameter("parent"));
         Node parentNode = dao.get(parentNodeId);
         Node nodeToSave = new Node(nodeName, parentNode);
+        nodeToSave.setParentNode(parentNode);
         try {
-            dao.save(nodeToSave);
+            long id = (Long) dao.save(nodeToSave);
+            dao.setLastCreatedNode(id);
         } catch (NodeDAO.DAOException e) {
             e.printStackTrace();
         }

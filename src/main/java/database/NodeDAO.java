@@ -12,7 +12,8 @@ import java.util.Set;
 
 public class NodeDAO {
     private Session currentSession;
-    public boolean isEmpty;
+    private long lastCreatedNode;
+    public boolean isEmpty = true;
     Set<Node> rootNodes = new HashSet<Node>();
 
     private static SessionFactory getSessionFactory() {
@@ -78,6 +79,22 @@ public class NodeDAO {
 
     public Set<Node> getRootNodes(){
         return rootNodes;
+    }
+
+    public void setRootNode(Node node){
+        rootNodes.add(node);
+    }
+
+    public void deleteRootNode(Node node){
+        rootNodes.remove(node);
+    }
+
+    public  long getLastCreatedNode(){
+        return lastCreatedNode;
+    }
+
+    public void setLastCreatedNode(long lastCreatedNode){
+        this.lastCreatedNode = lastCreatedNode;
     }
 
     public NodeDAO(){
