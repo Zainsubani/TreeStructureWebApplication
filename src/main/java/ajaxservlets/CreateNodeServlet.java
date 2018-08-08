@@ -25,12 +25,9 @@ public class CreateNodeServlet extends HttpServlet {
         Node parentNode = dao.get(parentNodeId);
         Node nodeToSave = new Node(nodeName, parentNode);
         nodeToSave.setParentNode(parentNode);
-        try {
-            long id = (Long) dao.save(nodeToSave);
-            dao.setLastCreatedNode(id);
-        } catch (NodeDAO.DAOException e) {
-            e.printStackTrace();
-        }
+        long id = (Long) dao.save(nodeToSave);
+        dao.setLastCreatedNode(id);
+
     }
 
     public void init(ServletConfig config) throws ServletException {

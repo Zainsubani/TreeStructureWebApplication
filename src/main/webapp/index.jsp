@@ -38,6 +38,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js">
     </script>
+<p id="demolog"></p>
 
     <script>
         var idToCreate;
@@ -104,46 +105,52 @@
                     }
                 }
             }).bind("move_node.jstree", function(e, data) {
+document.getElementById("demolog").innerHTML +=  data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id + ", " + data.parent + " (idToCreate : " + idToCreate + ", data.node.id : " + data.node.id + ")<br>";
                 $.post(
                     "movenode", {
-                        "id": data.node.id,
+                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id),
                         "new_parent_id": data.parent
                     }
                 ).fail(function(error) {
-                    alert(error.responseJSON)
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE MOVING NODE</b>"
                 });
             })
             .bind("rename_node.jstree", function(e, data) {
                 $.post(
                     "renamenode", {
-                        "id": data.node.id == "j1_1" ? idToCreate : data.node.id,
+                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id) ,
                         "name": data.text
                     }
                 ).fail(function(error) {
-                    alert(error.responseJSON + " (rename)")
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE RENAMING NODE</b>"
                 });
-
+		document.getElementById("demolog").innerHTML += "Try to rename : node #" + (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id)  + " to " + data.text + "<br>";
+		document.getElementById("demolog").innerHTML +="LOG: data.node.id=" + data.node.id + ", idToCreate=" + idToCreate + "<br>";
             })
             .bind("delete_node.jstree", function(e, data) {
                 $.post(
                     "deletenode", {
-                        "id": data.node.id
+                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id)
                     }
                 ).fail(function(error) {
-                    alert(error.responseJSON)
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE DELETENG NODE</b>"
                 });
             })
             .bind("create_node.jstree", function(e, data) {
                 $.post(
                     "createnode", {
                         "name": data.node.text,
-                        "parent": data.parent
+                        "parent" : data.parent
                     }
                 ).fail(function(error) {
-                    alert(error.responseJSON + " (create)")
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE CREATING NODE</b><br>"
                 });
-                $.getJSON("getlastcreatednode", function(data) {
-                    idToCreate = data.id;
+		document.getElementById("demolog").innerHTML += "Created node. Id: " + data.node.id + ", name: " + data.node.text + "<br>";
+                $.getJSON("getlastcreatednode", function(obj) {
+                    idToCreate = obj.id;
+		    document.getElementById("demolog").innerHTML += "idToCreate (local): " + idToCreate + "<br>";
+		    data.instance.set_id(node, idToCreate);
+		    data.instance.edit(idToCreate);
                 });
             });
     </script>

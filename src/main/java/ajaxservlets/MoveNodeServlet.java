@@ -38,11 +38,7 @@ public class MoveNodeServlet extends HttpServlet {
             node.setParentNode(null);
             dao.setRootNode(node);
         }
-        try {
-            dao.save(node);
-        } catch (NodeDAO.DAOException e) {
-            e.printStackTrace();
-        }
+        dao.save(node);
     }
 
     public void init(ServletConfig config) throws ServletException {

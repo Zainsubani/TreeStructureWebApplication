@@ -28,7 +28,8 @@ public class GetLastCreatedNodeServlet extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        writer.write("{ \"id\" : " + dao.getLastCreatedNode() + " }");
+        Long id = dao.getLastCreatedNode();
+        writer.write("{ \"id\" : " + id + " }");
     }
 
     public void init(ServletConfig config) throws ServletException {

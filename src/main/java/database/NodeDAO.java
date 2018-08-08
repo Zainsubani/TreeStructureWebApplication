@@ -13,7 +13,6 @@ import java.util.Set;
 public class NodeDAO {
     private Session currentSession;
     private long lastCreatedNode;
-    public boolean isEmpty = true;
     Set<Node> rootNodes = new HashSet<Node>();
 
     private static SessionFactory getSessionFactory() {
@@ -36,13 +35,10 @@ public class NodeDAO {
         return getCurrentSession().get(Node.class, id);
     }
 
-    public Serializable save(Node node) throws DAOException {
-        if (isEmpty && !(node.getParentNode()==null)){
-            throw new DAOException("You have to save root node first!");
-        } else if (node.getParentNode()==null){
+    public Serializable save(Node node) {
+        if (node.getParentNode()==null) {
             rootNodes.add(node);
         }
-        isEmpty = false;
         return getCurrentSession().save(node);
     }
 
@@ -51,9 +47,6 @@ public class NodeDAO {
     }
 
     public void delete(Node node) {
-        if(node.getParentNode()==null){
-            isEmpty = true; // last root node deleted
-        }
         getCurrentSession().delete(node);
     }
 
@@ -99,14 +92,5 @@ public class NodeDAO {
 
     public NodeDAO(){
         currentSession = getSessionFactory().openSession();
-        isEmpty = true;
-    }
-
-    public class DAOException extends Exception{
-        public DAOException(String message)
-        {
-            super(message);
-        }
-
     }
 }
