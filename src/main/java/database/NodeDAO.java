@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class NodeDAO {
     private Session currentSession;
-    private long lastCreatedNode;
     Set<Node> rootNodes = new HashSet<Node>();
 
     private static SessionFactory getSessionFactory() {
@@ -80,14 +79,6 @@ public class NodeDAO {
 
     public void deleteRootNode(Node node){
         rootNodes.remove(node);
-    }
-
-    public  long getLastCreatedNode(){
-        return lastCreatedNode;
-    }
-
-    public void setLastCreatedNode(long lastCreatedNode){
-        this.lastCreatedNode = lastCreatedNode;
     }
 
     public NodeDAO(){

@@ -41,7 +41,7 @@
 <p id="demolog"></p>
 
     <script>
-        var idToCreate;
+
         $('#lazy').jstree({
                 'core': {
                     'check_callback': true,
@@ -105,53 +105,53 @@
                     }
                 }
             }).bind("move_node.jstree", function(e, data) {
-document.getElementById("demolog").innerHTML +=  data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id + ", " + data.parent + " (idToCreate : " + idToCreate + ", data.node.id : " + data.node.id + ")<br>";
                 $.post(
                     "movenode", {
-                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id),
+                        "id": data.node.id,
                         "new_parent_id": data.parent
                     }
                 ).fail(function(error) {
-                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE MOVING NODE</b>"
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE MOVING NODE</b><br>"
                 });
             })
             .bind("rename_node.jstree", function(e, data) {
                 $.post(
                     "renamenode", {
-                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id) ,
+                        "id": (data.node.id) ,
                         "name": data.text
                     }
                 ).fail(function(error) {
-                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE RENAMING NODE</b>"
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE RENAMING NODE</b><br>"
                 });
-		document.getElementById("demolog").innerHTML += "Try to rename : node #" + (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id)  + " to " + data.text + "<br>";
-		document.getElementById("demolog").innerHTML +="LOG: data.node.id=" + data.node.id + ", idToCreate=" + idToCreate + "<br>";
+		document.getElementById("demolog").innerHTML += "Try to rename : node #" + data.node.id  + " to " + data.text + "<br>";
+		document.getElementById("demolog").innerHTML +="LOG: data.node.id=" + data.node.id + "<br>";
             })
             .bind("delete_node.jstree", function(e, data) {
                 $.post(
                     "deletenode", {
-                        "id": (data.node.id.substring(0,1)==="j" ? idToCreate : data.node.id)
+                        "id": (data.node.id)
                     }
                 ).fail(function(error) {
-                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE DELETENG NODE</b>"
+                    document.getElementById("demolog").innerHTML += "<b>ERROR WHILE DELETENG NODE</b><br>"
                 });
             })
             .bind("create_node.jstree", function(e, data) {
-                $.post(
-                    "createnode", {
-                        "name": data.node.text,
-                        "parent" : data.parent
-                    }
-                ).fail(function(error) {
+                $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "createnode",
+			data: { name: data.node.text, parent : data.parent },
+			success: function(resultData) {
+				document.getElementById("demolog").innerHTML += "Created node. Id: " + data.node.id + ", name: " + data.node.text + ", parent: " + data.parent + "<br>";
+				var id = resultData.id;
+				data.instance.set_id(data.node, id);
+		    		data.instance.edit(id);
+		    		document.getElementById("demolog").innerHTML += "Node saved!<br>"
+			}
+		}).fail(function(error) {
                     document.getElementById("demolog").innerHTML += "<b>ERROR WHILE CREATING NODE</b><br>"
                 });
-		document.getElementById("demolog").innerHTML += "Created node. Id: " + data.node.id + ", name: " + data.node.text + "<br>";
-                $.getJSON("getlastcreatednode", function(obj) {
-                    idToCreate = obj.id;
-		    document.getElementById("demolog").innerHTML += "idToCreate (local): " + idToCreate + "<br>";
-		    data.instance.set_id(node, idToCreate);
-		    data.instance.edit(idToCreate);
-                });
             });
+
     </script>
 </body>
