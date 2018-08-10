@@ -79,21 +79,10 @@ public class Node {
     }
 
     public String toString(){
-        /*
-        for testing
-
-        Iterator<Node> iterator = childrenNodes.iterator();
-        String result = "{ \"" + name + "\" : [ " + (iterator.hasNext()? iterator.next() : "");
-        while (iterator.hasNext()){
-            result += ", " + iterator.next();
-        }
-        result += " ] }";
-        */
         return  "\t{\n" +
                 "\t\t\"id\"          : \"" + id + "\",\n" +
                 "\t\t\"parent\"      : \"" + (isRoot() ? "#" : parentNode.id) + "\",\n" +
                 "\t\t\"text\"        : \"" + name + "\",\n" +
-                //"\t\t\"icon\"        : \"string\",\n"+
                 "\t\t\"children\"    : " + hasChildren() + "\n" +
                 "\t\t}\n";
     }
