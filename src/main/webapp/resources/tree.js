@@ -1,4 +1,5 @@
-$('#lazy').jstree({
+var previousSelectedNode;
+$('#tree').jstree({
     'core': {
         "themes": {
             "name": "proton",
@@ -102,4 +103,11 @@ $('#lazy').jstree({
             data.instance.edit(id);
         }
     });
+})
+.on('changed.jstree', function(evt, data){
+    if (previousSelectedNode !== null){
+        $("#tree").jstree(true).set_icon(previousSelectedNode, '');
+    }
+    $("#tree").jstree(true).set_icon(data.node, 'resources/selected.png');
+    previousSelectedNode = data.node;
 });
