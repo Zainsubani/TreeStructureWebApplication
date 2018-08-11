@@ -23,7 +23,7 @@
    </head>
    <body>
       <h1>Tree</h1>
-      <div id="lazy" class="demo"></div>
+      <div id="tree" class="demo"></div>
       <link rel="stylesheet" href="https://www.orangehilldev.com/jstree-bootstrap-theme/demo/assets/dist/themes/proton/style.css" />
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
